@@ -29,20 +29,23 @@ public class WaveManager : MonoBehaviour
 
     IEnumerator EnemySpawn(EnemyInfo enemyInfo)
     {
-        yield return new WaitForSeconds(enemyInfo.delayUntilSpawn);
+        yield return new WaitForSeconds(enemyInfo.delayUntilSpawn); //zaderjka
         int count = enemyInfo.count;
 
         for (int i = 0; i < count; i++)
         {
-            int randomnumberp = Random.Range(0, spawnpoints.Length);
+            int randomnumberp = Random.Range(0, spawnpoints.Length); //рандомный спавнпоинт
             Transform randomspawnpoint = spawnpoints[randomnumberp];
-            GameObject enemy = Instantiate(enemyInfo.prefab, randomspawnpoint.position, enemyInfo.prefab.transform.rotation);
+
+            GameObject enemy = Instantiate(enemyInfo.prefab, randomspawnpoint.position, enemyInfo.prefab.transform.rotation); //sam spawn
             SkibidiController skibidi_Controller = enemy.GetComponent<SkibidiController>();
 
-            skibidi_Controller.targetTransform = playerTransform;
+            skibidi_Controller.targetTransform = playerTransform; //стартовые настройки 
             skibidi_Controller.speed = enemyInfo.speed;
             skibidi_Controller.damage = enemyInfo.damage;
             skibidi_Controller.health = enemyInfo.health;
+
+            yield return new WaitForSeconds(enemyInfo.spawndelay);
         }
     }
 }

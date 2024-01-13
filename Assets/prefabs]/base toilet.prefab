@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5432293025548081977}
   - component: {fileID: 7634179881752481086}
   m_Layer: 6
-  m_Name: enemy
+  m_Name: base toilet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

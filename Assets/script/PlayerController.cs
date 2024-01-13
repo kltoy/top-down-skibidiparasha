@@ -57,8 +57,9 @@ public class PlayerController : MonoBehaviour
         foreach (Collider2D enemy in enemyList)
         {
             float distance = Vector2.Distance(transform.position, enemy.transform.position);
-
-            if (distance < mindistance)
+             SkibidiController skibidiController = enemy.gameObject.GetComponent<SkibidiController>();
+            
+            if (distance < mindistance && skibidiController.isAlive == true)
             {
                 mindistance = distance;
                 enemy_target = enemy.transform;

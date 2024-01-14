@@ -1,4 +1,3 @@
-using Mono.Cecil;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -11,7 +10,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask enemyMask;
 
     private float health;
-    private float lastShootTime;
 
     private Joystick joystick;
     private Animator animator;
@@ -57,8 +55,8 @@ public class PlayerController : MonoBehaviour
         foreach (Collider2D enemy in enemyList)
         {
             float distance = Vector2.Distance(transform.position, enemy.transform.position);
-             SkibidiController skibidiController = enemy.gameObject.GetComponent<SkibidiController>();
-            
+            SkibidiController skibidiController = enemy.gameObject.GetComponent<SkibidiController>();
+
             if (distance < mindistance && skibidiController.isAlive == true)
             {
                 mindistance = distance;
@@ -69,32 +67,19 @@ public class PlayerController : MonoBehaviour
         if (enemy_target != null)
         {
             if (enemy_target.position.x > transform.position.x)
-                spriteRenderer.flipX = true;
-
-            if (enemy_target.position.x < transform.position.x)
                 spriteRenderer.flipX = false;
 
-            var dir = enemy_target.position - _weapon.transform.position;
-            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            if (enemy_target.position.x < transform.position.x)
+                spriteRenderer.flipX = true;
 
-            _weapon.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            Shoot(dir );
+            var dir = enemy_target.position - transform.position;
+
+            _weapon.SetRotation(dir);
+            _weapon.Shoot(dir);
         }
     }
-    private void Shoot(Vector2 dir)
-    {
-     
-        if (lastShootTime + _weapon.firerate < Time.time)
-        {
-            lastShootTime = Time.time;
-            GameObject bullet = Instantiate(_weapon.bullet_prefab, _weapon.SHOOTPOINT.position, _weapon.transform.rotation);
-            Bullet bulletScript = bullet.GetComponent<Bullet>();
-            bulletScript.directionMove = dir.normalized;
-            bulletScript.damage = _weapon.damage;
-            Instantiate(_weapon.VFX, _weapon.SHOOTPOINT);
-        }
-    }
-    
+
+
     public void EquipWeapon(Weapon weapon)
     {
         _weapon = weapon;

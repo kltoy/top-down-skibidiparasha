@@ -44,6 +44,7 @@ public class WaveManager : MonoBehaviour
             skibidi_Controller.speed = enemyInfo.speed;
             skibidi_Controller.damage = enemyInfo.damage;
             skibidi_Controller.health = enemyInfo.health;
+            skibidi_Controller.rangeAttack = enemyInfo.rangeAttack;
 
             yield return new WaitForSeconds(enemyInfo.spawndelay);
         }
@@ -65,4 +66,5 @@ public class EnemyInfo
     public float health = 100;
     public int count = 2;
     public float spawndelay;
+    public float rangeAttack;
 }

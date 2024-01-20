@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,13 +10,26 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Weapon _weapon;
 
     [SerializeField] private LayerMask enemyMask;
+    [SerializeField] private Slider health_bar;
 
     private float health;
+
 
     private Joystick joystick;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb2D;
+
+
+    
+
+    public void TakeDamage(float damage)
+    {
+      if (health >0)
+        {
+          health -= damage;
+        }
+    }
 
     private void Awake()
     {
@@ -27,6 +42,13 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         health = maxHealth;
+        health_bar.maxValue = maxHealth;
+
+    }
+    void UpdateUI()
+    {
+        health_bar.value = health;
+         
     }
 
     void Update()

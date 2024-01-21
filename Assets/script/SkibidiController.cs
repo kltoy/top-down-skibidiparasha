@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class SkibidiController : MonoBehaviour
@@ -12,9 +13,24 @@ public class SkibidiController : MonoBehaviour
 
     private Rigidbody2D rb2D;
     private Animator animator;
-    
+    private bool canAttack = true;
+    private float distanceTargetAndSelf;
+    private PlayerController playerController;
 
-    
+
+
+    private void Attack()
+    {
+        if (distanceTargetAndSelf < rangeAttack && canAttack == true)
+        {
+            animator.SetTrigger("attack");
+            canAttack = false;
+            playerController.TakeDamage(damage);
+            
+
+            
+        }
+    }
 
     private void Awake()
     {
@@ -25,16 +41,18 @@ public class SkibidiController : MonoBehaviour
     private void Start()
     {
         isAlive = true;
+        playerController =  targetTransform.GetComponent<PlayerController>();
+       
     }
 
     void Update()
     {
         if (isAlive)
         {
+            
             Vector2 betweenTarget = targetTransform.position - transform.position;
             Vector2 direction = betweenTarget.normalized;
-            float distance = betweenTarget.magnitude;
-            
+            distanceTargetAndSelf = betweenTarget.magnitude;
 
             rb2D.velocity = direction * speed;
 
@@ -43,10 +61,8 @@ public class SkibidiController : MonoBehaviour
 
             if (direction.x < 0)
                 transform.localScale = new Vector3(1, 1, 1);
-            if(distance < rangeAttack)
-            {
-                animator.SetTrigger("attack")
-            }
+
+            Attack();
         }
     }
 

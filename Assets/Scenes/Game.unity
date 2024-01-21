@@ -633,12 +633,12 @@ MonoBehaviour:
   - enemy:
     - prefab: {fileID: 7632567648316103180, guid: 40296261124b9ff4784be808e42363ea, type: 3}
       delayUntilSpawn: 0
-      damage: 1
+      damage: 27.12
       speed: 2.32
-      health: 2619.1
+      health: 79.4
       count: 55
       spawndelay: 1
-      rangeAttack: 0
+      rangeAttack: 1
   spawnpoints:
   - {fileID: 351083247}
   - {fileID: 550604166}
@@ -2187,7 +2187,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7346180938625992609, guid: fbf573d30a081d24995f619cf281a2ae, type: 3}
       propertyPath: damage
-      value: 1220.9
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -13,22 +13,25 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Slider health_bar;
 
     private float health;
-
-
+    private bool isAlive = true;
     private Joystick joystick;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb2D;
 
 
-    
-
     public void TakeDamage(float damage)
     {
-      if (health >0)
+        if (health > 0)
         {
-          health -= damage;
+            health -= damage;
         }
+        else
+        {
+            animator.SetBool("isDead", true);
+            isAlive = false;
+        }
+
     }
 
     private void Awake()
@@ -48,57 +51,62 @@ public class PlayerController : MonoBehaviour
     void UpdateUI()
     {
         health_bar.value = health;
-         
     }
 
     void Update()
     {
-        rb2D.velocity = joystick.Direction * speed;
-
-        if (joystick.Horizontal < 0)
-            spriteRenderer.flipX = false;
-
-        if (joystick.Horizontal > 0)
-            spriteRenderer.flipX = true;
-
-        float currentSpeed = joystick.Direction.magnitude;
-
-        if (currentSpeed == 0)
-            animator.SetBool("isrun", false);
-
-        if (currentSpeed > 0)
-            animator.SetBool("isrun", true);
-
-        Collider2D[] enemyList = Physics2D.OverlapCircleAll(transform.position, _weapon.radius, enemyMask);
-
-        float mindistance = 1000;
-        Transform enemy_target = null;
-
-        foreach (Collider2D enemy in enemyList)
+        if (isAlive == true)
         {
-            float distance = Vector2.Distance(transform.position, enemy.transform.position);
-            SkibidiController skibidiController = enemy.gameObject.GetComponent<SkibidiController>();
+            rb2D.velocity = joystick.Direction * speed;
 
-            if (distance < mindistance && skibidiController.isAlive == true)
-            {
-                mindistance = distance;
-                enemy_target = enemy.transform;
-            }
-        }
-
-        if (enemy_target != null)
-        {
-            if (enemy_target.position.x > transform.position.x)
+            if (joystick.Horizontal < 0)
                 spriteRenderer.flipX = false;
 
-            if (enemy_target.position.x < transform.position.x)
+            if (joystick.Horizontal > 0)
                 spriteRenderer.flipX = true;
 
-            var dir = enemy_target.position - transform.position;
+            float currentSpeed = joystick.Direction.magnitude;
 
-            _weapon.SetRotation(dir);
-            _weapon.Shoot(dir);
+            if (currentSpeed == 0)
+                animator.SetBool("isrun", false);
+
+            if (currentSpeed > 0)
+                animator.SetBool("isrun", true);
+
+            Collider2D[] enemyList = Physics2D.OverlapCircleAll(transform.position, _weapon.radius, enemyMask);
+
+            float mindistance = 1000;
+            Transform enemy_target = null;
+
+            foreach (Collider2D enemy in enemyList)
+            {
+                float distance = Vector2.Distance(transform.position, enemy.transform.position);
+                SkibidiController skibidiController = enemy.gameObject.GetComponent<SkibidiController>();
+
+                if (distance < mindistance && skibidiController.isAlive == true)
+                {
+                    mindistance = distance;
+                    enemy_target = enemy.transform;
+                }
+            }
+
+            if (enemy_target != null)
+            {
+                if (enemy_target.position.x > transform.position.x)
+                    spriteRenderer.flipX = false;
+
+                if (enemy_target.position.x < transform.position.x)
+                    spriteRenderer.flipX = true;
+
+                var dir = enemy_target.position - transform.position;
+
+                _weapon.SetRotation(dir);
+                _weapon.Shoot(dir);
+            }
+
+            UpdateUI();
         }
+       
     }
 
 

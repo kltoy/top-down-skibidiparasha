@@ -38,6 +38,24 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: background
+    uniqueID: 927078009
+    locked: 0
+  - name: fence up
+    uniqueID: 1005011075
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: characters
+    uniqueID: 618819495
+    locked: 0
+  - name: weapons
+    uniqueID: 2993739337
+    locked: 0
+  - name: fence right left
+    uniqueID: 214731415
+    locked: 0
+  - name: fence down
+    uniqueID: 3581522863
     locked: 0

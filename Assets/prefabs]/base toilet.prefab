@@ -129,6 +129,8 @@ MonoBehaviour:
   health: 0
   damage: 100
   isAlive: 0
+  rangeAttack: 1
+  fireRate: 2
 --- !u!61 &5432293025548081977
 BoxCollider2D:
   m_ObjectHideFlags: 0

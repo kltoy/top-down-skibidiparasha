@@ -6,12 +6,15 @@ public class Weapon : MonoBehaviour
     public float ammo;
     public float firerate;
     public float radius;
+    public AudioClip shootSound;
 
     public GameObject bullet_prefab;
     public GameObject VFX;
     public Transform SHOOTPOINT;
 
     private float lastShootTime = 0;
+
+    private AudioSource audioSource;
 
     public void SetRotation(Vector2 dir)
     {
@@ -29,6 +32,11 @@ public class Weapon : MonoBehaviour
         transform.localScale = localscale;
     }
 
+    public void SetAudioSource(AudioSource newAudioSource)
+    {
+        audioSource = newAudioSource;
+    }
+
     public void Shoot(Vector2 dir)
     {
         if (lastShootTime + firerate < Time.time)
@@ -39,6 +47,8 @@ public class Weapon : MonoBehaviour
             bulletScript.directionMove = dir.normalized;
             bulletScript.damage = damage;
             Instantiate(VFX, SHOOTPOINT);
+
+            audioSource.PlayOneShot(shootSound, 1);
         }
     }
 }

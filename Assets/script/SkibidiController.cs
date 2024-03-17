@@ -10,8 +10,9 @@ public class SkibidiController : MonoBehaviour
     [HideInInspector] public float health;
     [HideInInspector] public float damage;
     [HideInInspector] public bool isAlive;
-    [HideInInspector] public float rangeAttack;
-    [HideInInspector] public float fireRate;
+
+    public float rangeAttack;
+    public float fireRate;
 
     private Rigidbody2D rb2D;
     private Animator animator;
@@ -25,6 +26,7 @@ public class SkibidiController : MonoBehaviour
         if (distanceTargetAndSelf < rangeAttack && canAttack == true)
         {
             animator.SetTrigger("attack");
+            print("атака");
             canAttack = false;
             playerController.TakeDamage(damage);
             StartCoroutine(coldown(fireRate));
@@ -79,6 +81,7 @@ public class SkibidiController : MonoBehaviour
 
         Destroy(rb2D);
         Destroy(GetComponent<Collider2D>());
+        Destroy(GetComponent<AudioSource>());
     }
 
     public void TakeDamage(float damge)

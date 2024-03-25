@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb2D;
-    private AudioSource audioSource;
+   [SerializeField] private AudioSource audioSource;
     public AudioClip walking;
     public GameObject panel;
     public WaveManager waveManager;
@@ -101,7 +101,6 @@ public class PlayerController : MonoBehaviour
         joystick = FindAnyObjectByType<Joystick>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb2D = GetComponent<Rigidbody2D>();
-        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()

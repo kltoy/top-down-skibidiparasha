@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     public AudioClip walking;
     public GameObject panel;
     public WaveManager waveManager;
+    public float balance;
 
     public TMP_Text recordText;
     public GameObject newRecordNotify;

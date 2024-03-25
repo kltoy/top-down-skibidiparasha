@@ -13,6 +13,7 @@ public class ammmmNAvernoePause : MonoBehaviour
     }
     public void SwitchPause()
     {
+
         if (isActive == true)
         {
             pausePanel.SetActive(false);

@@ -11,8 +11,10 @@ public class SkibidiController : MonoBehaviour
     [HideInInspector] public float damage;
     [HideInInspector] public bool isAlive;
 
+    [SerializeField] private GameObject prefabcoin;
     public float rangeAttack;
     public float fireRate;
+    
 
     private Rigidbody2D rb2D;
     private Animator animator;
@@ -73,6 +75,7 @@ public class SkibidiController : MonoBehaviour
 
     private void Death()
     {
+        Instantiate(prefabcoin, gameObject.transform.position, Quaternion.identity);
         animator.SetBool("isdead", true);
         Destroy(gameObject, 5);
         isAlive = false;
@@ -82,6 +85,7 @@ public class SkibidiController : MonoBehaviour
         Destroy(rb2D);
         Destroy(GetComponent<Collider2D>());
         Destroy(GetComponent<AudioSource>());
+        
     }
 
     public void TakeDamage(float damge)

@@ -113,7 +113,7 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    IEnumerator EnemySpawn(EnemyInfo enemyInfo)
+    IEnumerator EnemySpawn(EnemyInfo enemyInfo) 
     {
         int count = enemyInfo.count;
 

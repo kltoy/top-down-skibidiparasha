@@ -13,7 +13,10 @@ public class ammmmNAvernoePause : MonoBehaviour
     }
     public void SwitchPause()
     {
-
+        if (shop.isActive == true)
+        {
+            return;
+        }
         if (isActive == true)
         {
             pausePanel.SetActive(false);

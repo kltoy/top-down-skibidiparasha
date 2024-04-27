@@ -1,25 +1,39 @@
 using UnityEngine;
 
-public class sound : MonoBehaviour
+public class Sound : MonoBehaviour
 {
-    private AudioSource audioSource;
-    public float baseVolume;
+    private AudioSource[] audioSources;
+    private float[] baseVolumes;
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        audioSources = GetComponentsInChildren<AudioSource>();
     }
+
     public void AudioOn()
     {
-        audioSource.volume = baseVolume;
+        for (int i = 0; i < audioSources.Length; i++)
+        {
+            audioSources[i].volume = baseVolumes[i];
+        }
     }
+
     public void AudioOff()
     {
-        audioSource.volume = 0;
+        foreach (AudioSource source in audioSources)
+        {
+            source.volume = 0;
+        }
     }
+
     public void Start()
     {
-        baseVolume = audioSource.volume;
+        baseVolumes = new float[audioSources.Length];
+
+        for (int i = 0; i < audioSources.Length; i++)
+        {
+            baseVolumes[i] = audioSources[i].volume;
+        }
     }
 }
 

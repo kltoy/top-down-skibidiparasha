@@ -129,7 +129,8 @@ MonoBehaviour:
   health: 0
   damage: 100
   isAlive: 0
-  rangeAttack: 1
+  prefabcoin: {fileID: 2923770420344683652, guid: 126e5a76632328d4fae29a320521082f, type: 3}
+  rangeAttack: 0.6
   fireRate: 2
 --- !u!61 &5432293025548081977
 BoxCollider2D:

@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float maxHealth;
 
+    //источники звуков
+    [SerializeField] private AudioSource audioSourceShoot;
+    [SerializeField] private AudioSource audioSourceCoinCollect;
+
     private Weapon _weapon;
 
     [SerializeField] private LayerMask enemyMask;
@@ -18,16 +22,14 @@ public class PlayerController : MonoBehaviour
     private bool isAlive = true;
     private Joystick joystick;
     private Animator animator;
-    private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb2D;
-   [SerializeField] private AudioSource audioSource;
-    public AudioClip walking;
+
     public GameObject panel;
     public WaveManager waveManager;
     public float balance;
-
     public TMP_Text recordText;
     public GameObject newRecordNotify;
+    public TMP_Text coinBalance;
 
     public void TakeDamage(float damage)
     {
@@ -92,15 +94,25 @@ public class PlayerController : MonoBehaviour
 
     public void EquipWeapon(Weapon weapon)
     {
+        UnequipWeapon();
+
         _weapon = weapon;
-        _weapon.SetAudioSource(audioSource);
+        _weapon.SetAudioSource(audioSourceShoot);
+    }
+
+    private void UnequipWeapon()
+    {
+        if (_weapon != null) {
+            Destroy(_weapon.gameObject);
+        }
+        
+
     }
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         joystick = FindAnyObjectByType<Joystick>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         rb2D = GetComponent<Rigidbody2D>();
     }
 
@@ -115,7 +127,7 @@ public class PlayerController : MonoBehaviour
         if (isAlive == true)
         {
             rb2D.velocity = joystick.Direction * speed;
-            UpdateFlip();
+            UpdateScaleX();
 
             Transform enemy_target = FindEnemy();
             Shoot(enemy_target);
@@ -125,19 +137,33 @@ public class PlayerController : MonoBehaviour
             
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (isAlive == true && collision.gameObject.TryGetComponent(out Coin coin)) 
+        {
+            balance = balance + coin.balance;
+            coinBalance.text = balance.ToString();
+            audioSourceCoinCollect.Play();
+            Destroy(coin.gameObject);
+        }
+    }
 
     private void UpdateUI()
     {
         health_bar.value = health;
     }   
 
-    private void UpdateFlip()
+    private void UpdateScaleX()
     {
+        Vector3 localscale = transform.localScale;
+
         if (joystick.Horizontal < 0)
-            spriteRenderer.flipX = true;
+            localscale.x = -1;
 
         if (joystick.Horizontal > 0)
-            spriteRenderer.flipX = false;
+            localscale.x = 1;
+
+        transform.localScale = localscale;
     }
 
     private void UpdateAnimatorParameters()
@@ -155,31 +181,42 @@ public class PlayerController : MonoBehaviour
     {
         if (enemy_target != null)
         {
+            Vector3 localscale = transform.localScale;
+
             if (enemy_target.position.x > transform.position.x)
-                spriteRenderer.flipX = false;
+                localscale.x = 1;
 
             if (enemy_target.position.x < transform.position.x)
-                spriteRenderer.flipX = true;
+                localscale.x = -1;
 
+
+            transform.localScale = localscale;
             var dir = enemy_target.position - transform.position;
 
-            _weapon.SetRotation(dir);
-            _weapon.Shoot(dir);
+            _weapon.SetRotation(dir, localscale.x);
+            _weapon.TryAttack(dir);
         }
     }
 
     private Transform FindEnemy()
     {
-        Collider2D[] enemyList = Physics2D.OverlapCircleAll(transform.position, _weapon.radius, enemyMask);
+        ContactFilter2D contactFilter = new ContactFilter2D();
+        contactFilter.layerMask = enemyMask;
+        Collider2D[] enemyList = new Collider2D[50];
+
+        Physics2D.OverlapCollider(_weapon.attackZone, contactFilter, enemyList);
+
         Transform enemy_target = null;
         float mindistance = 1000;
 
         foreach (Collider2D enemy in enemyList)
         {
+            if (enemy == null) continue;
+
             float distance = Vector2.Distance(transform.position, enemy.transform.position);
             SkibidiController skibidiController = enemy.gameObject.GetComponent<SkibidiController>();
 
-            if (distance < mindistance && skibidiController.isAlive == true)
+            if (skibidiController && distance < mindistance && skibidiController.isAlive == true)
             {
                 mindistance = distance;
                 enemy_target = enemy.transform;

@@ -199,4 +199,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 0
   directionMove: {x: 0, y: 0}
-  speed: 6.34
+  speed: 10
+  BulletDelay: 5

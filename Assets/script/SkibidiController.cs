@@ -94,10 +94,11 @@ public class SkibidiController : MonoBehaviour
         {
             animator.SetTrigger("hit");
             health = health - damge;
+            if (health <= 0)
+            {
+                Death();
+            }
         }
-        else 
-        {
-            Death();
-        }
+        
     }
 }

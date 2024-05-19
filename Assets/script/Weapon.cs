@@ -6,21 +6,15 @@ public abstract class Weapon : MonoBehaviour
     public float firerate;
 
     private float lastShootTime = 0;
-    private AudioSource audioSource;
+    protected AudioSource audioSourceShoot;
 
-    [HideInInspector]
-    public Collider2D attackZone;
-
-    protected virtual void Awake()
-    {
-        attackZone = GetComponent<Collider2D>();
-    }
+    public Collider2D visionZone;
 
     public abstract void SetRotation(Vector2 dir, float playerScaleX);
 
-    public void SetAudioSource(AudioSource newAudioSource)
+    protected virtual void Awake()
     {
-        audioSource = newAudioSource;
+        audioSourceShoot = GetComponentInChildren<AudioSource>();
     }
 
     public void TryAttack(Vector2 dir)
@@ -29,9 +23,22 @@ public abstract class Weapon : MonoBehaviour
         {
             lastShootTime = Time.time;
             Attack(dir);
-
-            audioSource.Play();
         }
+    }
+
+    protected virtual void PlaySound()
+    {
+        audioSourceShoot.Play();
+    }
+
+    protected void StopSoundShoot()
+    {
+        audioSourceShoot.Stop();
+    }
+
+    public virtual void EmptyAttackZone()
+    {
+
     }
 
     protected abstract void Attack(Vector2 dir);

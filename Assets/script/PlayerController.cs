@@ -1,4 +1,6 @@
+using NUnit.Framework.Interfaces;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +12,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxHealth;
 
     //источники звуков
-    [SerializeField] private AudioSource audioSourceShoot;
     [SerializeField] private AudioSource audioSourceCoinCollect;
 
     private Weapon _weapon;
@@ -36,12 +37,31 @@ public class PlayerController : MonoBehaviour
         if (health > 0)
         {
             health -= damage;
+            UpdateHealthBar();
         }
         else if (isAlive == true)
         {
             Death();
         }
     }
+
+    public bool CheckMoney(float price)
+    {
+      if (balance >= price)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public void ChangeMoney(float amountMoney)
+    {
+        balance += amountMoney;
+        UpdateCoinBalanceUI();
+    }
+
 
     private void Death()
     {
@@ -97,7 +117,7 @@ public class PlayerController : MonoBehaviour
         UnequipWeapon();
 
         _weapon = weapon;
-        _weapon.SetAudioSource(audioSourceShoot);
+       
     }
 
     private void UnequipWeapon()
@@ -132,26 +152,28 @@ public class PlayerController : MonoBehaviour
             Transform enemy_target = FindEnemy();
             Shoot(enemy_target);
 
-            UpdateUI();
             UpdateAnimatorParameters();
-            
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (isAlive == true && collision.gameObject.TryGetComponent(out Coin coin)) 
         {
-            balance = balance + coin.balance;
-            coinBalance.text = balance.ToString();
+            ChangeMoney(coin.balance);
             audioSourceCoinCollect.Play();
             Destroy(coin.gameObject);
         }
     }
 
-    private void UpdateUI()
+    private void UpdateHealthBar()
     {
         health_bar.value = health;
-    }   
+    } 
+    
+    private void UpdateCoinBalanceUI()
+    {
+        coinBalance.text = balance.ToString();
+    }
 
     private void UpdateScaleX()
     {
@@ -196,15 +218,21 @@ public class PlayerController : MonoBehaviour
             _weapon.SetRotation(dir, localscale.x);
             _weapon.TryAttack(dir);
         }
+        else
+        {
+            _weapon.EmptyAttackZone();
+        }
     }
 
     private Transform FindEnemy()
     {
-        ContactFilter2D contactFilter = new ContactFilter2D();
-        contactFilter.layerMask = enemyMask;
-        Collider2D[] enemyList = new Collider2D[50];
+        ContactFilter2D contactFilter = new()
+        {
+            layerMask = enemyMask
+        };
+        List<Collider2D> enemyList = new();
 
-        Physics2D.OverlapCollider(_weapon.attackZone, contactFilter, enemyList);
+        Physics2D.OverlapCollider(_weapon.visionZone, contactFilter, enemyList);
 
         Transform enemy_target = null;
         float mindistance = 1000;

@@ -90,13 +90,20 @@ public class shop : MonoBehaviour
 [System.Serializable]
 public class Item
 {
-    public string title;
+    public string title { get; private set; }
+    public Sprite image { get; private set; }
+
     public float price;
-    public Sprite image;
     public string description;
     public GameObject prefab;
-}
 
+    public void Init()
+    {
+        image = prefab.GetComponentInChildren<SpriteRenderer>().sprite;
+        title = prefab.name;
+    }
+}
+ 
 [System.Serializable]
 
 public class ItemBox
@@ -111,6 +118,8 @@ public class ItemBox
 
     public void SetItem(Item newItem)
     {
+        newItem.Init();
+
         item = newItem;
         image.sprite = item.image;
         title.text = item.title;
@@ -122,15 +131,19 @@ public class ItemBox
 
     private void click()
     {
-        if (shop.playerController.balance >= item.price)
+        bool result = shop.playerController.CheckMoney(item.price);
+        if (result == true)
         {
-            shop.playerController.balance -= item.price;
+          shop.playerController.ChangeMoney(-item.price);
+
             shop.weaponManager.TakeWeapon(item.prefab);
         }
         else
         {
             Debug.Log("net deneg ti bomj");
         }
+
+      
     }
 }
 

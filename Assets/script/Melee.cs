@@ -38,18 +38,18 @@ public class Melee : Weapon
 
     protected override void Attack(Vector2 dir)
     {
-        print("мили");
         _animator.SetTrigger("attack");
         List<Collider2D> collders = new();
 
-        Physics2D.OverlapCollider(attackZone, collders);
+        Physics2D.OverlapCollider(visionZone, collders);
 
         foreach (Collider2D coll in collders) {
             if (coll.gameObject.TryGetComponent(out SkibidiController skibidi))
             {
                 skibidi.TakeDamage(damage);
             }
-
         }
+
+        PlaySound();
     }
 }

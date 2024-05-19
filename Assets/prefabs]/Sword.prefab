@@ -194,4 +194,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 60
   firerate: 1.5
-  attackZone: {fileID: 0}
+  visionZone: {fileID: 8696198336644019026}

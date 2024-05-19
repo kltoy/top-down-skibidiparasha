@@ -5,17 +5,7 @@ public class Gun : Weapon
     public GameObject bullet_prefab;
     public GameObject VFX;
     public Transform SHOOTPOINT;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    public float maxSpreadAngle;
 
     public override void SetRotation(Vector2 dir, float playerScaleX)
     {
@@ -36,15 +26,32 @@ public class Gun : Weapon
     }
 
 
-
     protected override void Attack(Vector2 dir)
     {
+        // Maximum spread angle in degrees
+
+        // Calculate base direction (normalized)
+        Vector2 baseDir = dir.normalized;
+
+        // Apply random spread to the base direction
+        float randomSpread = Random.Range(-maxSpreadAngle, maxSpreadAngle); // Random spread angle
+        Vector2 spreadDir = Quaternion.AngleAxis(randomSpread, Vector3.forward) * baseDir;
+
+        // Instantiate bullet
         GameObject bullet = Instantiate(bullet_prefab, SHOOTPOINT.position, transform.rotation);
         Bullet bulletScript = bullet.GetComponent<Bullet>();
-        bulletScript.directionMove = dir.normalized;
+
+        // Set bullet properties
+        bulletScript.directionMove = spreadDir.normalized; // Apply spread direction
         bulletScript.damage = damage;
+
+        // Instantiate visual effect
         Instantiate(VFX, SHOOTPOINT);
+        PlaySound();
     }
 
 }
+
+
+
 
